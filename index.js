@@ -111,12 +111,11 @@ client.connect((err) => {
 
 
   // Stripe payment
-  app.post("/create-payment-intent", cors(), async (req, res) => {
+  app.post("/create-payment-intent", async (req, res) => {
     const { amount } = req.body;
-    amount = amount * 100;
    try{
       const paymentIntent = await stripe.paymentIntents.create({
-        amount,
+        amount:amount,
         description: "E-commerce company",
         currency: "usd"
       });
