@@ -111,7 +111,7 @@ client.connect((err) => {
 
 
   // Stripe payment
-  app.post("/create-payment-intent", async (req, res) => {
+  app.post("/create-payment-intent", cors(), async (req, res) => {
     const { amount } = req.body;
     amount = amount * 100;
    try{
@@ -136,7 +136,7 @@ client.connect((err) => {
 
   
     app.get("/", (req, res) => {
-      res.send("This is nahid. document");
+      res.send("I am active");
     });
 
 });
