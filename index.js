@@ -22,6 +22,7 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+const stripe = require("stripe")(`${process.env.STRIPE_API_KEY}`);
 
 client.connect((err) => {
   const productCollection = client.db(`${process.env.DB_NAME}`).collection(`products`);
@@ -109,7 +110,31 @@ client.connect((err) => {
   // promo code api end;
 
 
+  // Stripe payment
+  app.post("/create-payment-intent", async (req, res) => {
+    const { amount } = req.body;
+    amount = amount * 100;
+   try{
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        description: "E-commerce company",
+        currency: "usd"
+      });
+      res.send({
+        clientSecret: paymentIntent.client_secret,
+        success:true
+      });
+    } catch(error){
+        console.log("Error", error);
+        res.json({
+          message: error,
+          success: false,
+        });
+    }
 
+  });
+
+  
 
 
 });
