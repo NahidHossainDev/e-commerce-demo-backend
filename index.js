@@ -36,6 +36,7 @@ client.connect((err) => {
       res.send(document);
     });
   });
+
   app.post("/addNewProduct", (req, res) => {
     let image;
     sharp(req.files.file.data)
@@ -66,11 +67,21 @@ client.connect((err) => {
        res.send(result.insertedCount > 0);
      });
    });
+  
   app.post("/getOrdersData", (req, res) => {
     orderCollection.find(req.body).toArray((err, document) => {
       res.send(document);
     });
   });
+
+  app.get(`/getOrderById/:id`, (req, res) => {
+    orderCollection
+      .find({ _id: ObjectId(req.params.id) })
+      .toArray((err, document) => {
+        res.send(document);
+      });
+  });
+
   app.patch("/updateOrderStatus/:id", (req, res) => {
     delete req.body._id;
     orderCollection
@@ -85,11 +96,13 @@ client.connect((err) => {
       res.send(result.insertedCount > 0);
     });
    });
+  
   app.get("/getPromoCode", (req, res) => {
     promoCodeCollection.find({}).toArray((err, document) => {
       res.send(document);
     });
   });
+
   app.post("/checkPromoCode", (req, res) => {
     promoCodeCollection
       .find({ promoCode: req.body.promoCode })
@@ -134,9 +147,7 @@ client.connect((err) => {
   });
 
   
-    app.get("/", (req, res) => {
-      res.send("I am active");
-    });
+  
 
 });
 
